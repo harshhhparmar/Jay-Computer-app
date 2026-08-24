@@ -6,6 +6,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -73,10 +74,10 @@ class MainActivity : ComponentActivity() {
                 }
               },
               actions = {
-                IconButton(onClick = { /* TODO */ }) {
+                IconButton(onClick = { }) {
                   Icon(Icons.Default.Search, contentDescription = "Search")
                 }
-                IconButton(onClick = { /* TODO */ }) {
+                IconButton(onClick = { }) {
                   Icon(Icons.Default.AccountCircle, contentDescription = "Profile")
                 }
               },
@@ -131,9 +132,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
   var webView by remember { mutableStateOf<WebView?>(null) }
+  var canGoBack by remember { mutableStateOf(false) }
   
   LaunchedEffect(url) {
     webView?.loadUrl(url)
+  }
+
+  BackHandler(enabled = canGoBack) {
+    webView?.goBack()
   }
 
   AndroidView(
@@ -154,6 +160,10 @@ fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
                 request: WebResourceRequest?
             ): Boolean {
                 return false // Open links within the WebView
+            }
+            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+                super.doUpdateVisitedHistory(view, url, isReload)
+                canGoBack = view?.canGoBack() == true
             }
         }
         webView = this
