@@ -32,6 +32,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -128,11 +129,13 @@ class MainActivity : ComponentActivity() {
   }
 }
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
   var webView by remember { mutableStateOf<WebView?>(null) }
   var canGoBack by remember { mutableStateOf(false) }
+  var isRefreshing by remember { mutableStateOf(false) }
   
   LaunchedEffect(url) {
     webView?.loadUrl(url)
@@ -142,36 +145,50 @@ fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
     webView?.goBack()
   }
 
-  AndroidView(
-    modifier = modifier,
-    factory = { context ->
-      WebView(context).apply {
-        settings.javaScriptEnabled = true
-        settings.domStorageEnabled = true
-        settings.loadWithOverviewMode = true
-        settings.useWideViewPort = true
-        settings.setSupportZoom(true)
-        settings.builtInZoomControls = true
-        settings.displayZoomControls = false
-        
-        webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
-                return false // Open links within the WebView
-            }
-            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
-                super.doUpdateVisitedHistory(view, url, isReload)
-                canGoBack = view?.canGoBack() == true
-            }
-        }
-        webView = this
-        loadUrl(url)
-      }
+  PullToRefreshBox(
+    isRefreshing = isRefreshing,
+    onRefresh = { 
+      isRefreshing = true
+      webView?.reload()
     },
-    update = { view ->
-      // Handled by LaunchedEffect
-    }
-  )
+    modifier = modifier
+  ) {
+    AndroidView(
+      modifier = Modifier.fillMaxSize(),
+      factory = { context ->
+        WebView(context).apply {
+          settings.javaScriptEnabled = true
+          settings.domStorageEnabled = true
+          settings.loadWithOverviewMode = true
+          settings.useWideViewPort = true
+          settings.setSupportZoom(true)
+          settings.builtInZoomControls = true
+          settings.displayZoomControls = false
+          isNestedScrollingEnabled = true
+          
+          webViewClient = object : WebViewClient() {
+              override fun shouldOverrideUrlLoading(
+                  view: WebView?,
+                  request: WebResourceRequest?
+              ): Boolean {
+                  return false // Open links within the WebView
+              }
+              override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+                  super.doUpdateVisitedHistory(view, url, isReload)
+                  canGoBack = view?.canGoBack() == true
+              }
+              override fun onPageFinished(view: WebView?, url: String?) {
+                  super.onPageFinished(view, url)
+                  isRefreshing = false
+              }
+          }
+          webView = this
+          loadUrl(url)
+        }
+      },
+      update = { view ->
+        // Handled by LaunchedEffect
+      }
+    )
+  }
 }
