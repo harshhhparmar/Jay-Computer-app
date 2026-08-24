@@ -1,0 +1,6 @@
+{
+  "name": "Jay Computer",
+  "description": "Android app for Jay Computer website",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
