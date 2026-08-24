@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     setContent {
-      var currentUrl by remember { mutableStateOf("https://jaycomputer.vercel.app/") }
+      var currentUrl by remember { mutableStateOf("https://jaycomputer.vercel.app/#home") }
       
       MyApplicationTheme {
         Scaffold(
@@ -93,26 +93,26 @@ class MainActivity : ComponentActivity() {
               NavigationBarItem(
                 icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                 label = { Text("Home") },
-                selected = currentUrl == "https://jaycomputer.vercel.app/",
-                onClick = { currentUrl = "https://jaycomputer.vercel.app/" }
+                selected = currentUrl == "https://jaycomputer.vercel.app/#home",
+                onClick = { currentUrl = "https://jaycomputer.vercel.app/#home" }
               )
               NavigationBarItem(
                 icon = { Icon(Icons.Default.Build, contentDescription = "Services") },
                 label = { Text("Services") },
-                selected = currentUrl == "https://jaycomputer.vercel.app/services",
-                onClick = { currentUrl = "https://jaycomputer.vercel.app/services" }
+                selected = currentUrl == "https://jaycomputer.vercel.app/#services",
+                onClick = { currentUrl = "https://jaycomputer.vercel.app/#services" }
               )
               NavigationBarItem(
                 icon = { Icon(Icons.Default.Email, contentDescription = "Inquiry") },
                 label = { Text("Inquiry") },
-                selected = currentUrl == "https://jaycomputer.vercel.app/inquiry",
-                onClick = { currentUrl = "https://jaycomputer.vercel.app/inquiry" }
+                selected = currentUrl == "https://jaycomputer.vercel.app/#enquiry",
+                onClick = { currentUrl = "https://jaycomputer.vercel.app/#enquiry" }
               )
               NavigationBarItem(
                 icon = { Icon(Icons.Default.Info, contentDescription = "About us") },
                 label = { Text("About us") },
-                selected = currentUrl == "https://jaycomputer.vercel.app/about",
-                onClick = { currentUrl = "https://jaycomputer.vercel.app/about" }
+                selected = currentUrl == "https://jaycomputer.vercel.app/#contact",
+                onClick = { currentUrl = "https://jaycomputer.vercel.app/#contact" }
               )
             }
           }
@@ -156,7 +156,6 @@ fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
                 return false // Open links within the WebView
             }
         }
-        setLayerType(android.view.View.LAYER_TYPE_SOFTWARE, null)
         webView = this
         loadUrl(url)
       }
