@@ -40,6 +40,13 @@ import androidx.navigation.NavController
 @Composable
 fun ServicesScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(true) }
+    
+    LaunchedEffect(Unit) {
+        delay(1500) // Simulate data loading
+        isLoading = false
+    }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
     val elevation by animateDpAsState(
@@ -93,14 +100,61 @@ fun ServicesScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(filteredServices) { service ->
-                    ScrollEnterAnimation {
-                        ServiceGridItem(service) {
-                            navController.navigate("service_details/${service.id}")
+                if (isLoading) {
+                    items(8) {
+                        ShimmerServiceGridItem()
+                    }
+                } else {
+                    items(filteredServices) { service ->
+                        ScrollEnterAnimation {
+                            ServiceGridItem(service) {
+                                navController.navigate("service_details/${service.id}")
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ShimmerServiceGridItem() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .shimmerEffect()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .height(14.dp)
+                    .fillMaxWidth(0.9f)
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                    .shimmerEffect()
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Box(
+                modifier = Modifier
+                    .height(14.dp)
+                    .fillMaxWidth(0.6f)
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                    .shimmerEffect()
+            )
         }
     }
 }

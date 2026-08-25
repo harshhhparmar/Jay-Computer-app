@@ -56,6 +56,13 @@ fun getIconForName(name: String): ImageVector {
 fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
     val view = LocalView.current
+    var isLoading by remember { mutableStateOf(true) }
+    
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(1500) // Simulate data loading
+        isLoading = false
+    }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
     val elevation by androidx.compose.animation.core.animateDpAsState(
@@ -185,13 +192,49 @@ fun HomeScreen(navController: NavController) {
             }
 
             val popularServices = ServicesData.services.filter { it.popular }.take(6)
-            items(popularServices) { service ->
-                ScrollEnterAnimation {
-                    ServiceListItem(service) {
-                        navController.navigate("service_details/${service.id}")
+            
+            if (isLoading) {
+                items(6) {
+                    ShimmerServiceListItem()
+                }
+            } else {
+                items(popularServices) { service ->
+                    ScrollEnterAnimation {
+                        ServiceListItem(service) {
+                            navController.navigate("service_details/${service.id}")
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ShimmerServiceListItem() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .shimmerEffect()
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.fillMaxWidth(0.7f).height(14.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                Spacer(modifier = Modifier.height(6.dp))
+                Box(modifier = Modifier.fillMaxWidth(0.4f).height(12.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+            }
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
         }
     }
 }
