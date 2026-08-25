@@ -37,21 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
-fun getIconForName(name: String): ImageVector {
-    return when (name) {
-        "CreditCard" -> Icons.Default.CreditCard
-        "HealthAndSafety" -> Icons.Default.HealthAndSafety
-        "People" -> Icons.Default.People
-        "Agriculture" -> Icons.Default.Agriculture
-        "FamilyRestroom" -> Icons.Default.FamilyRestroom
-        "Elderly" -> Icons.Default.Elderly
-        "Handyman" -> Icons.Default.Handyman
-        "School" -> Icons.Default.School
-        "MenuBook" -> Icons.Default.MenuBook
-        else -> Icons.Default.Article
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
