@@ -1,5 +1,6 @@
 package com.example
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,27 +13,44 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.draw.shadow
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InquiryScreen() {
     val context = LocalContext.current
+    val view = LocalView.current
     var name by remember { mutableStateOf("") }
     var mobile by remember { mutableStateOf("") }
     var selectedService by remember { mutableStateOf("General Inquiry") }
     var message by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
+    val elevation by animateDpAsState(
+        targetValue = if (isScrolled) 4.dp else 0.dp,
+        label = "TopAppBarElevation"
+    )
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                modifier = Modifier.shadow(elevation),
                 title = { Text("Make an Inquiry", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary
+                ),
+                scrollBehavior = scrollBehavior
             )
         }
     ) { padding ->
@@ -111,6 +129,7 @@ fun InquiryScreen() {
 
             Button(
                 onClick = {
+                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                     val text = "Inquiry from App\nName: $name\nMobile: $mobile\nService: $selectedService\nMessage: $message"
                     openWhatsApp(context, text)
                 },
@@ -131,14 +150,25 @@ fun InquiryScreen() {
 @Composable
 fun AboutScreen() {
     val context = LocalContext.current
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
+    val elevation by animateDpAsState(
+        targetValue = if (isScrolled) 4.dp else 0.dp,
+        label = "TopAppBarElevation"
+    )
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                modifier = Modifier.shadow(elevation),
                 title = { Text("About Us", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary
+                ),
+                scrollBehavior = scrollBehavior
             )
         }
     ) { padding ->
@@ -186,11 +216,11 @@ fun AboutScreen() {
 @Composable
 fun ContactRow(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, detail: String, onClick: (() -> Unit)?) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.bounceClick { onClick() } else Modifier),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        onClick = { onClick?.invoke() },
-        enabled = onClick != null,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
         Row(

@@ -3,7 +3,12 @@ package com.example
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.HapticFeedbackConstants
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,15 +51,29 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "home"
+    val view = LocalView.current
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
+                val navItemColors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                    label = { Text("Home") },
+                    label = { Text("Home", fontWeight = FontWeight.Medium) },
                     selected = currentRoute == "home",
+                    colors = navItemColors,
                     onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("home") {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
@@ -63,9 +83,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.List, contentDescription = "Services") },
-                    label = { Text("Services") },
+                    label = { Text("Services", fontWeight = FontWeight.Medium) },
                     selected = currentRoute == "services",
+                    colors = navItemColors,
                     onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("services") {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
@@ -75,9 +97,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Email, contentDescription = "Inquiry") },
-                    label = { Text("Inquiry") },
+                    label = { Text("Inquiry", fontWeight = FontWeight.Medium) },
                     selected = currentRoute == "inquiry",
+                    colors = navItemColors,
                     onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("inquiry") {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
@@ -87,9 +111,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = "About") },
-                    label = { Text("About") },
+                    label = { Text("About", fontWeight = FontWeight.Medium) },
                     selected = currentRoute == "about",
+                    colors = navItemColors,
                     onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("about") {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
@@ -103,7 +129,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         NavHost(
             navController = navController,
             startDestination = "home",
-            modifier = modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding),
+            enterTransition = { fadeIn(tween(300)) + slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) },
+            exitTransition = { fadeOut(tween(300)) },
+            popEnterTransition = { fadeIn(tween(300)) },
+            popExitTransition = { fadeOut(tween(300)) + slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) }
         ) {
             composable("home") { HomeScreen(navController) }
             composable("services") { ServicesScreen(navController) }

@@ -1,11 +1,17 @@
 package com.example
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.lazy.grid.items
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -16,8 +22,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.draw.shadow
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,15 +40,25 @@ import androidx.navigation.NavController
 @Composable
 fun ServicesScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
+    val elevation by animateDpAsState(
+        targetValue = if (isScrolled) 4.dp else 0.dp,
+        label = "TopAppBarElevation"
+    )
     
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                modifier = Modifier.shadow(elevation),
                 title = { Text("All Services", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary
+                ),
+                scrollBehavior = scrollBehavior
             )
         }
     ) { padding ->
@@ -52,7 +75,10 @@ fun ServicesScreen(navController: NavController) {
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
                 )
             )
             
@@ -68,8 +94,10 @@ fun ServicesScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(filteredServices) { service ->
-                    ServiceGridItem(service) {
-                        navController.navigate("service_details/${service.id}")
+                    ScrollEnterAnimation {
+                        ServiceGridItem(service) {
+                            navController.navigate("service_details/${service.id}")
+                        }
                     }
                 }
             }
@@ -82,20 +110,20 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
-            .height(130.dp),
+            .bounceClick { onClick() }
+            .height(140.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp).fillMaxSize(),
+            modifier = Modifier.padding(16.dp).fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(48.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
@@ -114,8 +142,18 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
             )
+            if (service.popular) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Popular",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }
@@ -124,11 +162,20 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
 @Composable
 fun ServiceDetailsScreen(navController: NavController, service: Service) {
     val context = LocalContext.current
+    val view = LocalView.current
     val scrollState = rememberScrollState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
+    val elevation by animateDpAsState(
+        targetValue = if (isScrolled) 4.dp else 0.dp,
+        label = "TopAppBarElevation"
+    )
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                modifier = Modifier.shadow(elevation),
                 title = { Text("Service Details") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -138,8 +185,10 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary
+                ),
+                scrollBehavior = scrollBehavior
             )
         }
     ) { padding ->
@@ -205,6 +254,7 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
             
             Button(
                 onClick = {
+                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                     val message = "Hello Jay Computer, I want to enquire about ${service.titleEn}."
                     openWhatsApp(context, message)
                 },

@@ -1,5 +1,6 @@
 package com.example
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,10 +21,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.draw.shadow
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,16 +55,25 @@ fun getIconForName(name: String): ImageVector {
 @Composable
 fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
+    val view = LocalView.current
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
+    val elevation by androidx.compose.animation.core.animateDpAsState(
+        targetValue = if (isScrolled) 4.dp else 0.dp,
+        label = "TopAppBarElevation"
+    )
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                modifier = Modifier.shadow(elevation),
                 title = { Text("Jay Computer", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
                     IconButton(onClick = { navController.navigate("services") }) {
@@ -66,82 +82,111 @@ fun HomeScreen(navController: NavController) {
                     IconButton(onClick = { /* TODO */ }) {
                         Icon(Icons.Default.Notifications, contentDescription = "Notifications")
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Hero / Action Card
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "All Online Services Under One Roof",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        "Fast, reliable government & digital solutions",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+            item {
+                ScrollEnterAnimation {
+                    // Hero / Action Card
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
-                        ActionIcon(Icons.Default.Phone, "Call") { openDialer(context) }
-                        ActionIcon(Icons.Default.Message, "WhatsApp") { openWhatsApp(context, "Hello Jay Computer!") }
-                        ActionIcon(Icons.Default.LocationOn, "Location") { openMaps(context) }
-                        ActionIcon(Icons.Default.List, "Services") { navController.navigate("services") }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(
+                                            MaterialTheme.colorScheme.primaryContainer,
+                                            MaterialTheme.colorScheme.surfaceVariant
+                                        )
+                                    )
+                                )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    "All Online Services Under One Roof",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    "Fast, reliable government & digital solutions",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    ActionIcon(Icons.Default.Phone, "Call") { openDialer(context) }
+                                    ActionIcon(Icons.Default.Message, "WhatsApp") { openWhatsApp(context, "Hello Jay Computer!") }
+                                    ActionIcon(Icons.Default.LocationOn, "Location") { openMaps(context) }
+                                    ActionIcon(Icons.Default.List, "Services") { navController.navigate("services") }
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            // Stats/Trust
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                StatCard("100+", "Services", Modifier.weight(1f))
-                StatCard("Fast", "Processing", Modifier.weight(1f))
-                StatCard("Reliable", "Support", Modifier.weight(1f))
+            item {
+                ScrollEnterAnimation {
+                    // Stats/Trust
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        StatCard("100+", "Services", Modifier.weight(1f))
+                        StatCard("Fast", "Processing", Modifier.weight(1f))
+                        StatCard("Reliable", "Support", Modifier.weight(1f))
+                    }
+                }
             }
 
-            // Popular Services
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Popular Services", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                TextButton(
-                    onClick = { navController.navigate("services") },
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Text("View All")
+            item {
+                ScrollEnterAnimation {
+                    // Popular Services
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Popular Services", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        TextButton(
+                            onClick = {
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                navController.navigate("services")
+                            },
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
+                            Text("View All")
+                        }
+                    }
                 }
             }
 
             val popularServices = ServicesData.services.filter { it.popular }.take(6)
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                popularServices.forEach { service ->
+            items(popularServices) { service ->
+                ScrollEnterAnimation {
                     ServiceListItem(service) {
                         navController.navigate("service_details/${service.id}")
                     }
@@ -153,10 +198,10 @@ fun HomeScreen(navController: NavController) {
 
 @Composable
 fun ActionIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.bounceClick { onClick() }) {
         Box(
             modifier = Modifier
-                .size(44.dp)
+                .size(48.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
@@ -192,7 +237,7 @@ fun ServiceListItem(service: Service, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .bounceClick { onClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         shape = RoundedCornerShape(12.dp)
