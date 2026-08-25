@@ -49,6 +49,7 @@ fun ServicesScreen(navController: NavController) {
                 placeholder = { Text("Search services...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                 singleLine = true,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface
@@ -84,7 +85,8 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
             .clickable { onClick() }
             .height(130.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp).fillMaxSize(),
@@ -93,18 +95,19 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
         ) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(44.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     getIconForName(service.iconName),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(24.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = service.titleEn,
                 fontWeight = FontWeight.Bold,
@@ -181,7 +184,8 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
             Text("Required Documents", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     service.documentsEn.forEachIndexed { index, doc ->

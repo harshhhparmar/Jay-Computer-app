@@ -31,8 +31,7 @@ private val LightColorScheme =
 
 @Composable
 fun MyApplicationTheme(
-  darkTheme: Boolean = isSystemInDarkTheme(),
-  // Disable dynamic color to enforce High Density theme colors
+  darkTheme: Boolean = false,
   dynamicColor: Boolean = false,
   content: @Composable () -> Unit,
 ) {

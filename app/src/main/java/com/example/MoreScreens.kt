@@ -1,5 +1,6 @@
 package com.example
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,7 +28,7 @@ fun InquiryScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Make an Inquiry") },
+                title = { Text("Make an Inquiry", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -39,17 +41,18 @@ fun InquiryScreen() {
                 .padding(padding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Fill out the form below to get quick assistance.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Fill out the form below to get quick assistance.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Full Name") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
 
             OutlinedTextField(
@@ -57,7 +60,8 @@ fun InquiryScreen() {
                 onValueChange = { mobile = it },
                 label = { Text("Mobile Number") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
 
             ExposedDropdownMenuBox(
@@ -70,7 +74,8 @@ fun InquiryScreen() {
                     readOnly = true,
                     label = { Text("Select Service") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
@@ -100,7 +105,8 @@ fun InquiryScreen() {
                 onValueChange = { message = it },
                 label = { Text("Message (Optional)") },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
-                maxLines = 4
+                maxLines = 4,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
 
             Button(
@@ -110,11 +116,12 @@ fun InquiryScreen() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp),
-                enabled = name.isNotBlank() && mobile.isNotBlank()
+                enabled = name.isNotBlank() && mobile.isNotBlank(),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             ) {
                 Icon(Icons.Default.Send, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Submit via WhatsApp")
+                Text("Submit via WhatsApp", fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -127,7 +134,7 @@ fun AboutScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("About Us") },
+                title = { Text("About Us", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -145,14 +152,15 @@ fun AboutScreen() {
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(24.dp).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(Icons.Default.Computer, contentDescription = null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Icon(Icons.Default.Computer, contentDescription = null, modifier = Modifier.size(56.dp), tint = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text("Jay Computer", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer)
                     Text("CSC & Online Services", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                 }
@@ -164,9 +172,9 @@ fun AboutScreen() {
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Divider()
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(4.dp))
 
             ContactRow(Icons.Default.LocationOn, "Address", "Bus Station Road, Halvad 363330\nબસ સ્ટેશન રોડ, હળવદ 363330") { openMaps(context) }
             ContactRow(Icons.Default.Phone, "Phone", PHONE_NUMBER) { openDialer(context) }
@@ -180,14 +188,24 @@ fun ContactRow(icon: androidx.compose.ui.graphics.vector.ImageVector, title: Str
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         onClick = { onClick?.invoke() },
-        enabled = onClick != null
+        enabled = onClick != null,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, contentDescription = title, tint = MaterialTheme.colorScheme.primary)
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(icon, contentDescription = title, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(20.dp))
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)

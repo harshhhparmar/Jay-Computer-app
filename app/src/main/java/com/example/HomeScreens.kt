@@ -56,8 +56,17 @@ fun HomeScreen(navController: NavController) {
                 title = { Text("Jay Computer", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                actions = {
+                    IconButton(onClick = { navController.navigate("services") }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search")
+                    }
+                    IconButton(onClick = { /* TODO */ }) {
+                        Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                    }
+                }
             )
         }
     ) { padding ->
@@ -66,7 +75,7 @@ fun HomeScreen(navController: NavController) {
                 .padding(padding)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Hero / Action Card
@@ -81,10 +90,16 @@ fun HomeScreen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "All Online Services & Certificates",
+                        "All Online Services Under One Roof",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Fast, reliable government & digital solutions",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -94,6 +109,7 @@ fun HomeScreen(navController: NavController) {
                         ActionIcon(Icons.Default.Phone, "Call") { openDialer(context) }
                         ActionIcon(Icons.Default.Message, "WhatsApp") { openWhatsApp(context, "Hello Jay Computer!") }
                         ActionIcon(Icons.Default.LocationOn, "Location") { openMaps(context) }
+                        ActionIcon(Icons.Default.List, "Services") { navController.navigate("services") }
                     }
                 }
             }
@@ -114,13 +130,16 @@ fun HomeScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Popular Services", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                TextButton(onClick = { navController.navigate("services") }) {
+                Text("Popular Services", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                TextButton(
+                    onClick = { navController.navigate("services") },
+                    contentPadding = PaddingValues(0.dp)
+                ) {
                     Text("View All")
                 }
             }
 
-            val popularServices = ServicesData.services.filter { it.popular }.take(4)
+            val popularServices = ServicesData.services.filter { it.popular }.take(6)
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 popularServices.forEach { service ->
                     ServiceListItem(service) {
@@ -137,15 +156,15 @@ fun ActionIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
         Box(
             modifier = Modifier
-                .size(48.dp)
+                .size(44.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onPrimary)
+            Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp))
         }
         Spacer(modifier = Modifier.height(4.dp))
-        Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface)
+        Text(label, fontSize = 11.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
@@ -153,16 +172,17 @@ fun ActionIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
 fun StatCard(value: String, label: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(vertical = 12.dp, horizontal = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(value, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-            Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 16.sp)
+            Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Medium)
         }
     }
 }
@@ -174,31 +194,33 @@ fun ServiceListItem(service: Service, onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     getIconForName(service.iconName),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(20.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(service.titleEn, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(service.titleEn, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(service.categoryEn, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Icon(Icons.Default.ChevronRight, contentDescription = "View details")
+            Icon(Icons.Default.ChevronRight, contentDescription = "View details", tint = MaterialTheme.colorScheme.outline)
         }
     }
 }
