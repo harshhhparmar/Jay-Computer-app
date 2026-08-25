@@ -5,6 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.view.HapticFeedbackConstants
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -46,6 +50,12 @@ const val PHONE_NUMBER = "+919925658113"
 const val WHATSAPP_NUMBER = "919925658113"
 const val ADDRESS_URL = "geo:0,0?q=Bus Station Road, Halvad 363330"
 
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
+val LocalAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
+
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
@@ -129,29 +139,50 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "home",
-            modifier = modifier.padding(innerPadding),
+        SharedTransitionLayout {
+            NavHost(
+                navController = navController,
+                startDestination = "home",
+                modifier = modifier.padding(innerPadding),
             enterTransition = { fadeIn(tween(300)) + slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) },
             exitTransition = { fadeOut(tween(300)) },
             popEnterTransition = { fadeIn(tween(300)) },
             popExitTransition = { fadeOut(tween(300)) + slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) }
-        ) {
-            composable("home") { HomeScreen(navController) }
-            composable("services") { ServicesScreen(navController) }
-            composable(
-                "service_details/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val id = backStackEntry.arguments?.getString("id")
-                val service = ServicesData.services.find { it.id == id }
-                if (service != null) {
-                    ServiceDetailsScreen(navController, service)
+            ) {
+                composable("home") { 
+                    CompositionLocalProvider(
+                        LocalSharedTransitionScope provides this@SharedTransitionLayout,
+                        LocalAnimatedVisibilityScope provides this@composable
+                    ) {
+                        HomeScreen(navController) 
+                    }
                 }
+                composable("services") { 
+                    CompositionLocalProvider(
+                        LocalSharedTransitionScope provides this@SharedTransitionLayout,
+                        LocalAnimatedVisibilityScope provides this@composable
+                    ) {
+                        ServicesScreen(navController) 
+                    }
+                }
+                composable(
+                    "service_details/{id}",
+                    arguments = listOf(navArgument("id") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val id = backStackEntry.arguments?.getString("id")
+                    val service = ServicesData.services.find { it.id == id }
+                    if (service != null) {
+                        CompositionLocalProvider(
+                            LocalSharedTransitionScope provides this@SharedTransitionLayout,
+                            LocalAnimatedVisibilityScope provides this@composable
+                        ) {
+                            ServiceDetailsScreen(navController, service)
+                        }
+                    }
+                }
+                composable("inquiry") { InquiryScreen() }
+                composable("about") { AboutScreen() }
             }
-            composable("inquiry") { InquiryScreen() }
-            composable("about") { AboutScreen() }
         }
     }
 }

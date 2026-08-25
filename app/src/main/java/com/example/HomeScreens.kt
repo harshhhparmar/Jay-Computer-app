@@ -237,6 +237,7 @@ fun PremiumServiceCard(service: Service, onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
+                    .sharedElementModifier("icon_${service.id}")
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f)),
                 contentAlignment = Alignment.Center

@@ -1,11 +1,14 @@
 package com.example
 
 import android.view.HapticFeedbackConstants
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -91,6 +94,7 @@ fun Modifier.shimmerEffect(): Modifier = composed {
         ),
         label = "shimmer_x"
     )
+
     background(
         brush = Brush.linearGradient(
             colors = listOf(
@@ -103,5 +107,39 @@ fun Modifier.shimmerEffect(): Modifier = composed {
         )
     ).onGloballyPositioned {
         size = it.size
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun Modifier.sharedElementModifier(key: String): Modifier = composed {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+    
+    if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            Modifier.sharedElement(
+                state = rememberSharedContentState(key = key),
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+    } else {
+        Modifier
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun Modifier.sharedBoundsModifier(key: String): Modifier = composed {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+    
+    if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            Modifier.sharedBounds(
+                sharedContentState = rememberSharedContentState(key = key),
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+    } else {
+        Modifier
     }
 }

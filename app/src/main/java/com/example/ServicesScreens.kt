@@ -181,6 +181,7 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
+                    .sharedElementModifier("icon_${service.id}")
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
@@ -288,6 +289,7 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                 Box(
                     modifier = Modifier
                         .size(56.dp)
+                        .sharedElementModifier("icon_${service.id}")
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
