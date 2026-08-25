@@ -75,7 +75,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     onClick = {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("home") {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo("home") { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -89,7 +89,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     onClick = {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("services") {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo("home") { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -103,7 +103,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     onClick = {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("inquiry") {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo("home") { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -117,7 +117,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     onClick = {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         navController.navigate("about") {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo("home") { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
