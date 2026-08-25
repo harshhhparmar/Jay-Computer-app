@@ -335,9 +335,37 @@ fun HeroCard(context: android.content.Context, navController: NavController) {
                         )
                     )
                 )
-                .padding(24.dp)
         ) {
-            Column {
+            androidx.compose.foundation.Canvas(modifier = Modifier.matchParentSize()) {
+                val circleColor = Color.White.copy(alpha = 0.05f)
+                val lineColor = Color.White.copy(alpha = 0.1f)
+                
+                // Abstract geometric/digital shapes
+                drawCircle(
+                    color = circleColor,
+                    radius = size.width * 0.4f,
+                    center = androidx.compose.ui.geometry.Offset(size.width * 0.9f, 0f)
+                )
+                drawCircle(
+                    color = circleColor,
+                    radius = size.width * 0.25f,
+                    center = androidx.compose.ui.geometry.Offset(size.width, size.height * 0.8f)
+                )
+                
+                // Digital nodes & connections
+                val node1 = androidx.compose.ui.geometry.Offset(size.width * 0.75f, size.height * 0.25f)
+                val node2 = androidx.compose.ui.geometry.Offset(size.width * 0.9f, size.height * 0.65f)
+                val node3 = androidx.compose.ui.geometry.Offset(size.width * 0.6f, -size.height * 0.1f)
+
+                drawLine(color = lineColor, start = node1, end = node2, strokeWidth = 3f)
+                drawLine(color = lineColor, start = node3, end = node1, strokeWidth = 3f)
+                
+                drawCircle(color = Color.White.copy(alpha = 0.15f), radius = 12f, center = node1)
+                drawCircle(color = Color.White.copy(alpha = 0.15f), radius = 8f, center = node2)
+                drawCircle(color = Color.White.copy(alpha = 0.15f), radius = 16f, center = node3)
+            }
+            
+            Column(modifier = Modifier.padding(24.dp)) {
                 Text(
                     text = "Welcome to Jay Computer",
                     style = MaterialTheme.typography.labelMedium,
