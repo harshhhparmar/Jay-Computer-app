@@ -54,6 +54,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     val view = LocalView.current
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
                 containerColor = MaterialTheme.colorScheme.surface,

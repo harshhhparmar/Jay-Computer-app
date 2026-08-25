@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -59,16 +60,17 @@ fun HomeScreen(navController: NavController) {
     )
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 modifier = Modifier.shadow(elevation),
                 title = { Text("Jay Computer", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    scrolledContainerColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
                 ),
                 actions = {
                     IconButton(onClick = { navController.navigate("services") }) {
@@ -87,15 +89,19 @@ fun HomeScreen(navController: NavController) {
                 .padding(padding)
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             item {
                 ScrollEnterAnimation {
-                    // Hero / Action Card
+                    // Premium Hero Card
                     Card(
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(20.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
                         Box(
                             modifier = Modifier
@@ -103,39 +109,44 @@ fun HomeScreen(navController: NavController) {
                                 .background(
                                     Brush.linearGradient(
                                         colors = listOf(
-                                            MaterialTheme.colorScheme.primaryContainer,
-                                            MaterialTheme.colorScheme.surfaceVariant
+                                            MaterialTheme.colorScheme.primary,
+                                            MaterialTheme.colorScheme.tertiary
                                         )
                                     )
                                 )
+                                .padding(24.dp)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(20.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
+                            Column(horizontalAlignment = Alignment.Start) {
                                 Text(
-                                    "All Online Services Under One Roof",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                    text = "Welcome to Jay Computer",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    "Fast, reliable government & digital solutions",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                                    text = "All Government Services, Under One Roof",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    lineHeight = 28.sp
                                 )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Fast, secure, and hassle-free document processing.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
+                                )
+                                Spacer(modifier = Modifier.height(20.dp))
+                                Button(
+                                    onClick = { navController.navigate("services") },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                                        contentColor = MaterialTheme.colorScheme.primary
+                                    ),
+                                    shape = RoundedCornerShape(12.dp),
+                                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
                                 ) {
-                                    ActionIcon(Icons.Default.Phone, "Call") { openDialer(context) }
-                                    ActionIcon(Icons.Default.Message, "WhatsApp") { openWhatsApp(context, "Hello Jay Computer!") }
-                                    ActionIcon(Icons.Default.LocationOn, "Location") { openMaps(context) }
-                                    ActionIcon(Icons.Default.List, "Services") { navController.navigate("services") }
+                                    Text("Explore Services", fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -145,21 +156,36 @@ fun HomeScreen(navController: NavController) {
 
             item {
                 ScrollEnterAnimation {
-                    // Stats/Trust
+                    // Quick Actions
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        StatCard("100+", "Services", Modifier.weight(1f))
-                        StatCard("Fast", "Processing", Modifier.weight(1f))
-                        StatCard("Reliable", "Support", Modifier.weight(1f))
+                        QuickActionItem(Icons.Default.Phone, "Call", MaterialTheme.colorScheme.secondaryContainer) { openDialer(context) }
+                        QuickActionItem(Icons.Default.Message, "WhatsApp", Color(0xFFE8F5E9)) { openWhatsApp(context, "Hello Jay Computer!") }
+                        QuickActionItem(Icons.Default.LocationOn, "Location", MaterialTheme.colorScheme.tertiaryContainer) { openMaps(context) }
+                        QuickActionItem(Icons.Default.List, "Services", MaterialTheme.colorScheme.primaryContainer) { navController.navigate("services") }
                     }
                 }
             }
 
             item {
                 ScrollEnterAnimation {
-                    // Popular Services
+                    // Stats/Trust
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        CompactStatCard("100+", "Services", Modifier.weight(1f))
+                        CompactStatCard("Fast", "Processing", Modifier.weight(1f))
+                        CompactStatCard("Reliable", "Support", Modifier.weight(1f))
+                    }
+                }
+            }
+
+            item {
+                ScrollEnterAnimation {
+                    // Popular Services Header
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -188,15 +214,14 @@ fun HomeScreen(navController: NavController) {
             } else {
                 items(popularServices) { service ->
                     ScrollEnterAnimation {
-                        ServiceListItem(service) {
+                        PremiumServiceCard(service) {
                             navController.navigate("service_details/${service.id}")
                         }
                     }
                 }
             }
         }
-    }
-}
+    }}
 
 @Composable
 fun ShimmerServiceListItem() {
@@ -227,20 +252,80 @@ fun ShimmerServiceListItem() {
     }
 }
 
+
 @Composable
-fun ActionIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
+fun QuickActionItem(icon: ImageVector, label: String, containerColor: Color, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.bounceClick { onClick() }) {
         Box(
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary),
+                .size(56.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(containerColor),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp))
+            Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(26.dp))
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(label, fontSize = 11.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface)
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(label, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
+    }
+}
+
+@Composable
+fun CompactStatCard(value: String, label: String, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(value, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 18.sp)
+            Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Medium)
+        }
+    }
+}
+
+@Composable
+fun PremiumServiceCard(service: Service, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .bounceClick { onClick() },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    getIconForName(service.iconName),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(service.titleEn, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurface)
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(service.categoryEn, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Icon(Icons.Default.ChevronRight, contentDescription = "View details", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
+        }
     }
 }
 
