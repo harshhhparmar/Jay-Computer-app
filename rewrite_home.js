@@ -1,4 +1,6 @@
-package com.example
+const fs = require('fs');
+
+const content = `package com.example
 
 import android.content.Context
 import android.view.HapticFeedbackConstants
@@ -211,7 +213,7 @@ fun HomeScreen(navController: NavController) {
                             enter = fadeIn(tween(400, delayMillis = 250 + (index * 50))) + slideInVertically(tween(400, delayMillis = 250 + (index * 50)), initialOffsetY = { 40 })
                         ) {
                             PremiumServiceCard(service) {
-                                navController.navigate("service_details/${service.id}")
+                                navController.navigate("service_details/\\${service.id}")
                             }
                         }
                     }
@@ -412,7 +414,7 @@ fun PremiumServiceCard(service: Service, onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(54.dp)
-                    .sharedElementModifier("icon_${service.id}")
+                    .sharedElementModifier("icon_\\${service.id}")
                     .clip(RoundedCornerShape(14.dp))
                     .background(
                         Brush.linearGradient(
@@ -505,3 +507,7 @@ fun ShimmerServiceListItem() {
         }
     }
 }
+`
+
+fs.writeFileSync('app/src/main/java/com/example/HomeScreens.kt', content);
+console.log("Rewrote HomeScreens.kt");
