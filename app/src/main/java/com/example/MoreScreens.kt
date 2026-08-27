@@ -39,6 +39,8 @@ fun InquiryScreen() {
         label = "TopAppBarElevation"
     )
 
+    SystemBarsColorEffect(backgroundColor = MaterialTheme.colorScheme.primary)
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -156,6 +158,8 @@ fun AboutScreen() {
         targetValue = if (isScrolled) 4.dp else 0.dp,
         label = "TopAppBarElevation"
     )
+
+    SystemBarsColorEffect(backgroundColor = MaterialTheme.colorScheme.primary)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

@@ -32,6 +32,8 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
+    SystemBarsColorEffect(backgroundColor = Color(0xFFF8F9FE))
+
     Scaffold(
         topBar = {
             TopAppBar(

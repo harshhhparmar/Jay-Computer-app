@@ -35,6 +35,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import com.example.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -75,6 +79,9 @@ fun HomeScreen(navController: NavController) {
         label = "TopAppBarElevation"
     )
 
+    val topBarColor = if (isScrolled) MaterialTheme.colorScheme.surface else Color(0xFFF8F9FE)
+    SystemBarsColorEffect(backgroundColor = topBarColor)
+
     // A subtle, premium background layered behind everything
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F9FE))) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -107,15 +114,14 @@ fun HomeScreen(navController: NavController) {
                     modifier = Modifier.shadow(elevation),
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
+                            Image(
+                                painter = painterResource(id = R.drawable.jay_logo),
+                                contentDescription = "Jay Computer Logo",
                                 modifier = Modifier
-                                    .size(32.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(MaterialTheme.colorScheme.primary),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("J", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                            }
+                                    .size(36.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                contentScale = ContentScale.Crop
+                            )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 "Jay Computer",

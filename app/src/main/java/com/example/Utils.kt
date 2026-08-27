@@ -30,6 +30,25 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.launch
+import android.app.Activity
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.core.view.WindowCompat
+
+@Composable
+fun SystemBarsColorEffect(backgroundColor: Color) {
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            val isLightBackground = backgroundColor.luminance() > 0.5f
+            val controller = WindowCompat.getInsetsController(window, view)
+            controller.isAppearanceLightStatusBars = isLightBackground
+            controller.isAppearanceLightNavigationBars = isLightBackground
+        }
+    }
+}
 
 @Composable
 fun ScrollEnterAnimation(

@@ -64,6 +64,9 @@ fun ServicesScreen(navController: NavController) {
         label = "TopAppBarElevation"
     )
 
+    val topBarColor = if (isScrolled) MaterialTheme.colorScheme.surface else Color(0xFFF8F9FE)
+    SystemBarsColorEffect(backgroundColor = topBarColor)
+
     // A subtle, premium background layered behind everything
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F9FE))) {
         Canvas(modifier = Modifier.fillMaxSize()) {
