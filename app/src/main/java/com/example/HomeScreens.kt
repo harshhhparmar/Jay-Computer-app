@@ -141,7 +141,7 @@ fun HomeScreen(navController: NavController) {
                         IconButton(onClick = { navController.navigate("services") }) {
                             Icon(Icons.Default.Search, contentDescription = "Search")
                         }
-                        IconButton(onClick = { /* TODO */ }) {
+                        IconButton(onClick = { android.widget.Toast.makeText(context, "No new notifications", android.widget.Toast.LENGTH_SHORT).show() }) {
                             Icon(Icons.Default.Notifications, contentDescription = "Notifications")
                         }
                     },
@@ -264,7 +264,7 @@ fun HeroSection(context: Context, navController: NavController) {
                     // Curved lines
                     val path = androidx.compose.ui.graphics.Path().apply {
                         moveTo(0f, size.height * 0.6f)
-                        quadraticBezierTo(size.width * 0.5f, size.height * 0.8f, size.width, size.height * 0.3f)
+                        quadraticTo(size.width * 0.5f, size.height * 0.8f, size.width, size.height * 0.3f)
                     }
                     drawPath(
                         path = path,

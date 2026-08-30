@@ -7,7 +7,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +66,7 @@ fun InquiryScreen() {
                 .padding(padding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp).imePadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text("Fill out the form below to get quick assistance.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
@@ -72,15 +77,17 @@ fun InquiryScreen() {
                 label = { Text("Full Name") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
 
             OutlinedTextField(
                 value = mobile,
-                onValueChange = { mobile = it },
+                onValueChange = { if (it.length <= 15 && it.all { char -> char.isDigit() || char == '+' }) mobile = it },
                 label = { Text("Mobile Number") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
 
@@ -94,7 +101,7 @@ fun InquiryScreen() {
                     readOnly = true,
                     label = { Text("Select Service") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
                 )
                 ExposedDropdownMenu(
@@ -126,6 +133,7 @@ fun InquiryScreen() {
                 label = { Text("Message (Optional)") },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
                 maxLines = 4,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
 
@@ -137,10 +145,10 @@ fun InquiryScreen() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp),
-                enabled = name.isNotBlank() && mobile.isNotBlank(),
+                enabled = name.isNotBlank() && mobile.length >= 10,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             ) {
-                Icon(Icons.Default.Send, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Submit via WhatsApp", fontWeight = FontWeight.Bold)
             }

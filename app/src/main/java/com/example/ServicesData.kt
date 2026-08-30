@@ -1,7 +1,9 @@
 package com.example
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class Service(
@@ -32,15 +34,15 @@ fun getIconForName(name: String): ImageVector {
         "HomeRepairService" -> Icons.Default.HomeRepairService
         "Construction" -> Icons.Default.Construction
         "School" -> Icons.Default.School
-        "MenuBook" -> Icons.Default.MenuBook
+        "MenuBook" -> Icons.AutoMirrored.Filled.MenuBook
         "Security" -> Icons.Default.Security
         "PostAdd" -> Icons.Default.PostAdd
         "DirectionsCar" -> Icons.Default.DirectionsCar
         "AccountBalance" -> Icons.Default.AccountBalance
         "Payments" -> Icons.Default.Payments
         "Business" -> Icons.Default.Business
-        "TrendingUp" -> Icons.Default.TrendingUp
-        else -> Icons.Default.Article
+        "TrendingUp" -> Icons.AutoMirrored.Filled.TrendingUp
+        else -> Icons.AutoMirrored.Filled.Article
     }
 }
 
