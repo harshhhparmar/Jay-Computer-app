@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/transparent" />
+    <!-- The required 288dp canvas size for Android 12+ splash screens -->
+    <item
+        android:width="288dp"
+        android:height="288dp"
+        android:drawable="@android:color/transparent" />
+    
+    <!-- The logo, scaled to 120dp so its square corners fit perfectly inside the 192dp circular safe zone -->
     <item
         android:drawable="@drawable/jay_logo"
         android:gravity="center"
-        android:width="144dp"
-        android:height="144dp" />
+        android:width="120dp"
+        android:height="120dp" />
 </layer-list>

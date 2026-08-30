@@ -46,21 +46,14 @@ import com.example.ui.ErrorStateComponent
 fun ServicesScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("All") }
-    var isLoading by rememberSaveable { mutableStateOf(true) }
-    var hasError by rememberSaveable { mutableStateOf(true) }
+    var isLoading by rememberSaveable { mutableStateOf(false) }
+    var hasError by rememberSaveable { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
     
     val view = LocalView.current
 
-    LaunchedEffect(isLoading) {
-        if (isLoading) {
-            visible = false
-            delay(800) // Simulate network delay
-            isLoading = false
-            if (!hasError) {
-                visible = true
-            }
-        }
+    LaunchedEffect(Unit) {
+        visible = true
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
