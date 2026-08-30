@@ -158,10 +158,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 navController = navController,
                 startDestination = "home",
                 modifier = modifier.padding(innerPadding),
-            enterTransition = { fadeIn(tween(300)) + slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) },
-            exitTransition = { fadeOut(tween(300)) },
-            popEnterTransition = { fadeIn(tween(300)) },
-            popExitTransition = { fadeOut(tween(300)) + slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) }
+            enterTransition = { fadeIn(tween(220)) + slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(220)) },
+            exitTransition = { fadeOut(tween(220)) },
+            popEnterTransition = { fadeIn(tween(220)) },
+            popExitTransition = { fadeOut(tween(220)) + slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(220)) }
             ) {
                 composable("home") { 
                     CompositionLocalProvider(
@@ -235,17 +235,17 @@ fun RowScope.CustomBottomNavItem(
 
     val scale by animateFloatAsState(
         targetValue = if (selected) 1.15f else 1.0f,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        animationSpec = tween(150),
         label = "scale"
     )
     val color by animateColorAsState(
         targetValue = if (selected) activeColor else inactiveColor,
-        animationSpec = tween(300),
+        animationSpec = tween(150),
         label = "color"
     )
     val indicatorAlpha by animateFloatAsState(
         targetValue = if (selected) 1f else 0f,
-        animationSpec = tween(300),
+        animationSpec = tween(150),
         label = "alpha"
     )
 
