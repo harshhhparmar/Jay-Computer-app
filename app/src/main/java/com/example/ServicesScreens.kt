@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.example.ui.ErrorStateComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,16 +46,20 @@ fun ServicesScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("All") }
     var isLoading by rememberSaveable { mutableStateOf(true) }
+    var hasError by rememberSaveable { mutableStateOf(true) }
     var visible by remember { mutableStateOf(false) }
     
     val view = LocalView.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isLoading) {
         if (isLoading) {
-            delay(300) // Simulate data loading
+            visible = false
+            delay(800) // Simulate network delay
             isLoading = false
+            if (!hasError) {
+                visible = true
+            }
         }
-        visible = true
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -194,24 +199,35 @@ fun ServicesScreen(navController: NavController) {
                     matchesSearch && matchesCategory
                 }
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    if (isLoading) {
-                        items(8) {
-                            ShimmerServiceGridItem()
+                if (hasError && !isLoading) {
+                    ErrorStateComponent(
+                        modifier = Modifier.weight(1f),
+                        onRetry = {
+                            hasError = false
+                            isLoading = true
                         }
-                    } else {
-                        itemsIndexed(filteredServices) { index, service ->
-                            AnimatedVisibility(
-                                visible = visible,
-                                enter = fadeIn(tween(400, delayMillis = 100 + (index * 30))) + slideInVertically(tween(400, delayMillis = 100 + (index * 30)), initialOffsetY = { 30 })
-                            ) {
-                                ServiceGridItem(service) {
-                                    navController.navigate("service_details/${service.id}")
+                    )
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        if (isLoading) {
+                            items(8) {
+                                ShimmerServiceGridItem()
+                            }
+                        } else {
+                            itemsIndexed(filteredServices) { index, service ->
+                                AnimatedVisibility(
+                                    visible = visible,
+                                    enter = fadeIn(tween(400, delayMillis = 100 + (index * 30))) + slideInVertically(tween(400, delayMillis = 100 + (index * 30)), initialOffsetY = { 30 })
+                                ) {
+                                    ServiceGridItem(service) {
+                                        navController.navigate("service_details/${service.id}")
+                                    }
                                 }
                             }
                         }
