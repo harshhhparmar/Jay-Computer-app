@@ -143,7 +143,7 @@ fun ServicesScreen(navController: NavController) {
                             ) {
                                 suggestions.forEach { suggestion ->
                                     DropdownMenuItem(
-                                        text = { Text(suggestion.titleEn) },
+                                        text = { Text("${suggestion.titleEn} / ${suggestion.titleGu}", maxLines = 1, overflow = TextOverflow.Ellipsis) },
                                         onClick = {
                                             searchQuery = suggestion.titleEn
                                             expanded = false
@@ -313,14 +313,14 @@ fun ServiceGridItem(service: Service, onClick: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = service.titleEn,
+                text = "${service.titleEn}\n${service.titleGu}",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
-                maxLines = 2,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface,
-                lineHeight = 18.sp
+                lineHeight = 16.sp
             )
         }
     }

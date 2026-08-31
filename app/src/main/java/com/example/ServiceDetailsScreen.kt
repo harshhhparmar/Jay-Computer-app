@@ -47,7 +47,8 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                     IconButton(onClick = {
                         val shareIntent = Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, "Check out this service: ${service.titleEn}\n\nRequired Documents:\n${service.documentsEn.joinToString("\n") { "- $it" }}\n\nProvided by Jay Computer.")
+                            val docsText = service.documentsEn.zip(service.documentsGu).joinToString("\n") { (en, gu) -> "- $en / $gu" }
+                            putExtra(Intent.EXTRA_TEXT, "Check out this service: ${service.titleEn} / ${service.titleGu}\n\nRequired Documents:\n$docsText\n\nProvided by Jay Computer.")
                             type = "text/plain"
                         }
                         context.startActivity(Intent.createChooser(shareIntent, "Share Service"))
@@ -96,11 +97,12 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = service.titleEn,
+                    text = "${service.titleEn}\n${service.titleGu}",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    lineHeight = 32.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Surface(
@@ -108,7 +110,7 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                     color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
                 ) {
                     Text(
-                        text = service.categoryEn,
+                        text = "${service.categoryEn} • ${service.categoryGu}",
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -133,7 +135,7 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = service.descriptionEn,
+                        text = "${service.descriptionEn}\n\n${service.descriptionGu}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 22.sp
@@ -160,7 +162,7 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    service.documentsEn.forEach { doc ->
+                    service.documentsEn.zip(service.documentsGu).forEach { (docEn, docGu) ->
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -168,9 +170,10 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
                             Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF4CAF50), modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = doc,
+                                text = "${docEn}\n${docGu}",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
+                                lineHeight = 20.sp
                             )
                         }
                     }

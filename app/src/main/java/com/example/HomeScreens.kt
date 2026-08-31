@@ -440,12 +440,13 @@ fun PremiumServiceCard(service: Service, onClick: () -> Unit) {
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = service.titleEn,
+                    text = "${service.titleEn}\n${service.titleGu}",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    lineHeight = 18.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -456,7 +457,7 @@ fun PremiumServiceCard(service: Service, onClick: () -> Unit) {
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = service.categoryEn,
+                            text = "${service.categoryEn} • ${service.categoryGu}",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             fontSize = 10.sp,
