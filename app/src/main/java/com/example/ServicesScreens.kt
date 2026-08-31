@@ -48,13 +48,8 @@ fun ServicesScreen(navController: NavController) {
     var selectedCategory by remember { mutableStateOf("All") }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var hasError by rememberSaveable { mutableStateOf(false) }
-    var visible by rememberSaveable { mutableStateOf(false) }
     
     val view = LocalView.current
-
-    LaunchedEffect(Unit) {
-        visible = true
-    }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val isScrolled = scrollBehavior.state.overlappedFraction > 0.01f
@@ -98,11 +93,7 @@ fun ServicesScreen(navController: NavController) {
             }
         ) { padding ->
             Column(modifier = Modifier.padding(padding).fillMaxSize()) {
-                AnimatedVisibility(
-                    visible = visible,
-                    enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { -20 })
-                ) {
-                    Column {
+                Column {
                         var expanded by remember { mutableStateOf(false) }
                         val suggestions = if (searchQuery.isNotBlank()) {
                             ServicesData.services.filter { 
@@ -184,8 +175,6 @@ fun ServicesScreen(navController: NavController) {
                             }
                         }
                     }
-                }
-
                 val filteredServices = ServicesData.services.filter { 
                     val matchesSearch = it.titleEn.contains(searchQuery, ignoreCase = true) || 
                                         it.titleGu.contains(searchQuery, ignoreCase = true)
@@ -215,14 +204,9 @@ fun ServicesScreen(navController: NavController) {
                             }
                         } else {
                             itemsIndexed(filteredServices) { index, service ->
-                                AnimatedVisibility(
-                                    visible = visible,
-                                    enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { 30 })
-                                ) {
-                                    ServiceGridItem(service) {
+                                ServiceGridItem(service) {
                                         navController.navigate("service_details/${service.id}")
                                     }
-                                }
                             }
                         }
                     }

@@ -62,14 +62,12 @@ fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
     val view = LocalView.current
     var isLoading by rememberSaveable { mutableStateOf(true) }
-    var visible by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (isLoading) {
             
             isLoading = false
         }
-        visible = true
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -158,28 +156,14 @@ fun HomeScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 item {
-                    AnimatedVisibility(
-                        visible = visible,
-                        enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { 40 })
-                    ) {
                         HeroSection(context = context, navController = navController)
-                    }
                 }
 
                 item {
-                    AnimatedVisibility(
-                        visible = visible,
-                        enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { 30 })
-                    ) {
                         TrustStrip()
-                    }
                 }
 
                 item {
-                    AnimatedVisibility(
-                        visible = visible,
-                        enter = fadeIn(tween(100))
-                    ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -201,7 +185,6 @@ fun HomeScreen(navController: NavController) {
                                 Text("View All", fontWeight = FontWeight.Bold)
                             }
                         }
-                    }
                 }
 
                 val popularServices = ServicesData.services.filter { it.popular }.take(6)
@@ -212,14 +195,9 @@ fun HomeScreen(navController: NavController) {
                     }
                 } else {
                     itemsIndexed(popularServices) { index, service ->
-                        AnimatedVisibility(
-                            visible = visible,
-                            enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { 30 })
-                        ) {
                             PremiumServiceCard(service) {
                                 navController.navigate("service_details/${service.id}")
                             }
-                        }
                     }
                 }
             }
