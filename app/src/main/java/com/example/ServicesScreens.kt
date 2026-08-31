@@ -48,7 +48,7 @@ fun ServicesScreen(navController: NavController) {
     var selectedCategory by remember { mutableStateOf("All") }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var hasError by rememberSaveable { mutableStateOf(false) }
-    var visible by remember { mutableStateOf(false) }
+    var visible by rememberSaveable { mutableStateOf(false) }
     
     val view = LocalView.current
 

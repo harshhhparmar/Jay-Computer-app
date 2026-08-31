@@ -62,7 +62,7 @@ fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
     val view = LocalView.current
     var isLoading by rememberSaveable { mutableStateOf(true) }
-    var visible by remember { mutableStateOf(false) }
+    var visible by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (isLoading) {
