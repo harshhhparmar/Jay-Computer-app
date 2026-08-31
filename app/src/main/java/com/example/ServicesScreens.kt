@@ -100,7 +100,7 @@ fun ServicesScreen(navController: NavController) {
             Column(modifier = Modifier.padding(padding).fillMaxSize()) {
                 AnimatedVisibility(
                     visible = visible,
-                    enter = fadeIn(tween(150)) + slideInVertically(tween(150), initialOffsetY = { -20 })
+                    enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { -20 })
                 ) {
                     Column {
                         var expanded by remember { mutableStateOf(false) }
@@ -217,7 +217,7 @@ fun ServicesScreen(navController: NavController) {
                             itemsIndexed(filteredServices) { index, service ->
                                 AnimatedVisibility(
                                     visible = visible,
-                                    enter = fadeIn(tween(150)) + slideInVertically(tween(150), initialOffsetY = { 30 })
+                                    enter = fadeIn(tween(100)) + slideInVertically(tween(100), initialOffsetY = { 30 })
                                 ) {
                                     ServiceGridItem(service) {
                                         navController.navigate("service_details/${service.id}")
