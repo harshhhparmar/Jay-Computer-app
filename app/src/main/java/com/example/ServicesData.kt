@@ -42,12 +42,83 @@ fun getIconForName(name: String): ImageVector {
         "Payments" -> Icons.Default.Payments
         "Business" -> Icons.Default.Business
         "TrendingUp" -> Icons.AutoMirrored.Filled.TrendingUp
+        "IdCard" -> Icons.Default.Badge
+        "Globe" -> Icons.Default.Public
+        "Printer" -> Icons.Default.Print
+        "ShieldCheck" -> Icons.Default.Shield
+        "Banknote" -> Icons.Default.Money
         else -> Icons.AutoMirrored.Filled.Article
     }
 }
 
 object ServicesData {
     val services = listOf(
+        Service(
+            id = "aadhaar-update",
+            titleEn = "Aadhaar Card Update & Print",
+            titleGu = "આધાર કાર્ડ સુધારો અને પ્રિન્ટ",
+            categoryEn = "Cards",
+            categoryGu = "કાર્ડ સંબંધિત કામગીરી",
+            descriptionEn = "Update name, address, mobile number in Aadhaar card or get a smart PVC print.",
+            descriptionGu = "આધાર કાર્ડમાં નામ, સરનામું, મોબાઈલ નંબર સુધારો અથવા સ્માર્ટ PVC પ્રિન્ટ કઢાવો.",
+            documentsEn = listOf("Aadhaar Card", "Valid Proof (for update)", "Linked Mobile Number"),
+            documentsGu = listOf("આધાર કાર્ડ", "માન્ય પુરાવો (સુધારા માટે)", "લિંક કરેલ મોબાઈલ નંબર"),
+            iconName = "IdCard",
+            popular = true
+        ),
+        Service(
+            id = "passport-application",
+            titleEn = "Passport Application",
+            titleGu = "પાસપોર્ટ અરજી",
+            categoryEn = "Government Documents",
+            categoryGu = "સરકારી ડોક્યુમેન્ટ્સ",
+            descriptionEn = "New passport application, renewal, and appointment booking.",
+            descriptionGu = "નવા પાસપોર્ટ માટે અરજી, રીન્યુઅલ અને એપોઈન્ટમેન્ટ બુકિંગ.",
+            documentsEn = listOf("Aadhaar Card", "PAN Card / Voter ID", "School Leaving Certificate / Birth Certificate"),
+            documentsGu = listOf("આધાર કાર્ડ", "પાન કાર્ડ / ચૂંટણી કાર્ડ", "સ્કુલ લીવીંગ / જન્મનો દાખલો"),
+            iconName = "Globe",
+            popular = false
+        ),
+        Service(
+            id = "police-clearance",
+            titleEn = "Police Clearance Certificate (PCC)",
+            titleGu = "પોલીસ ક્લિયરન્સ સર્ટિફિકેટ",
+            categoryEn = "Government Documents",
+            categoryGu = "સરકારી ડોક્યુમેન્ટ્સ",
+            descriptionEn = "Apply for Police Clearance Certificate for visa, job or immigration.",
+            descriptionGu = "વિઝા, નોકરી અથવા ઇમિગ્રેશન માટે પોલીસ ક્લિયરન્સ સર્ટિફિકેટની અરજી.",
+            documentsEn = listOf("Passport", "Aadhaar Card", "Address Proof", "Photo"),
+            documentsGu = listOf("પાસપોર્ટ", "આધાર કાર્ડ", "રહેઠાણનો પુરાવો", "ફોટો"),
+            iconName = "ShieldCheck",
+            popular = false
+        ),
+        Service(
+            id = "money-transfer",
+            titleEn = "Money Transfer & AEPS",
+            titleGu = "મની ટ્રાન્સફર અને AEPS",
+            categoryEn = "SBI / Banking Services",
+            categoryGu = "SBI / બેન્કિંગ સેવાઓ",
+            descriptionEn = "Send money instantly anywhere in India and cash withdrawal using Aadhaar (AEPS).",
+            descriptionGu = "સમગ્ર ભારતમાં તરત જ પૈસા મોકલો અને આધાર કાર્ડથી રોકડ ઉપાડ (AEPS).",
+            documentsEn = listOf("Bank Account Details", "Aadhaar Card (for AEPS)", "Mobile Number"),
+            documentsGu = listOf("બેંક ખાતાની વિગતો", "આધાર કાર્ડ (AEPS માટે)", "મોબાઈલ નંબર"),
+            iconName = "Banknote",
+            popular = false
+        ),
+        Service(
+            id = "xerox-print",
+            titleEn = "Xerox, Print & Lamination",
+            titleGu = "ઝેરોક્ષ, પ્રિન્ટ અને લેમિનેશન",
+            categoryEn = "General Services",
+            categoryGu = "સામાન્ય સેવાઓ",
+            descriptionEn = "High quality color/B&W printing, xerox, lamination, and spiral binding.",
+            descriptionGu = "ઉચ્ચ ગુણવત્તાવાળી કલર/B&W પ્રિન્ટિંગ, ઝેરોક્ષ, લેમિનેશન અને સ્પાઈરલ બાઈન્ડીંગ.",
+            documentsEn = listOf("Document/File in Pen Drive or WhatsApp"),
+            documentsGu = listOf("પેન ડ્રાઈવ અથવા વોટ્સએપમાં ડોક્યુમેન્ટ/ફાઈલ"),
+            iconName = "Printer",
+            popular = false
+        ),
+
         Service(
             id = "income-certificate",
             titleEn = "Income Certificate",
