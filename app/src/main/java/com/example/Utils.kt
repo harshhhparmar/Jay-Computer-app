@@ -130,21 +130,7 @@ fun Modifier.shimmerEffect(): Modifier = composed {
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-fun Modifier.sharedElementModifier(key: String): Modifier = composed {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
-    
-    if (sharedTransitionScope != null && animatedVisibilityScope != null) {
-        with(sharedTransitionScope) {
-            Modifier.sharedElement(
-                state = rememberSharedContentState(key = key),
-                animatedVisibilityScope = animatedVisibilityScope
-            )
-        }
-    } else {
-        Modifier
-    }
-}
+fun Modifier.sharedElementModifier(key: String): Modifier = this
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun Modifier.sharedBoundsModifier(key: String): Modifier = composed {
