@@ -217,7 +217,7 @@ fun ServicesScreen(navController: NavController) {
                             itemsIndexed(filteredServices) { index, service ->
                                 AnimatedVisibility(
                                     visible = visible,
-                                    enter = fadeIn(tween(400, delayMillis = 100 + (index * 30))) + slideInVertically(tween(400, delayMillis = 100 + (index * 30)), initialOffsetY = { 30 })
+                                    enter = fadeIn(tween(300)) + slideInVertically(tween(300), initialOffsetY = { 30 })
                                 ) {
                                     ServiceGridItem(service) {
                                         navController.navigate("service_details/${service.id}")

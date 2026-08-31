@@ -66,7 +66,7 @@ fun HomeScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         if (isLoading) {
-            delay(300)
+            
             isLoading = false
         }
         visible = true
@@ -160,7 +160,7 @@ fun HomeScreen(navController: NavController) {
                 item {
                     AnimatedVisibility(
                         visible = visible,
-                        enter = fadeIn(tween(500)) + slideInVertically(tween(500), initialOffsetY = { 50 })
+                        enter = fadeIn(tween(400)) + slideInVertically(tween(400), initialOffsetY = { 40 })
                     ) {
                         HeroSection(context = context, navController = navController)
                     }
@@ -169,7 +169,7 @@ fun HomeScreen(navController: NavController) {
                 item {
                     AnimatedVisibility(
                         visible = visible,
-                        enter = fadeIn(tween(500, delayMillis = 100)) + slideInVertically(tween(500, delayMillis = 100), initialOffsetY = { 30 })
+                        enter = fadeIn(tween(400)) + slideInVertically(tween(400), initialOffsetY = { 30 })
                     ) {
                         TrustStrip()
                     }
@@ -178,7 +178,7 @@ fun HomeScreen(navController: NavController) {
                 item {
                     AnimatedVisibility(
                         visible = visible,
-                        enter = fadeIn(tween(500, delayMillis = 200))
+                        enter = fadeIn(tween(400))
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -214,7 +214,7 @@ fun HomeScreen(navController: NavController) {
                     itemsIndexed(popularServices) { index, service ->
                         AnimatedVisibility(
                             visible = visible,
-                            enter = fadeIn(tween(400, delayMillis = 250 + (index * 50))) + slideInVertically(tween(400, delayMillis = 250 + (index * 50)), initialOffsetY = { 40 })
+                            enter = fadeIn(tween(300)) + slideInVertically(tween(300), initialOffsetY = { 30 })
                         ) {
                             PremiumServiceCard(service) {
                                 navController.navigate("service_details/${service.id}")

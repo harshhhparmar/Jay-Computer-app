@@ -12,6 +12,8 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -103,9 +105,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                             onClick = {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 navController.navigate("home") {
-                                    popUpTo(navController.graph.startDestinationId) { saveState = false }
+                                    popUpTo(navController.graph.startDestinationId) { saveState = true }
                                     launchSingleTop = true
-                                    restoreState = false
+                                    restoreState = true
                                 }
                             }
                         )
@@ -158,10 +160,22 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 navController = navController,
                 startDestination = "home",
                 modifier = modifier.padding(innerPadding),
-            enterTransition = { fadeIn(tween(220)) + slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(220)) },
-            exitTransition = { fadeOut(tween(220)) },
-            popEnterTransition = { fadeIn(tween(220)) },
-            popExitTransition = { fadeOut(tween(220)) + slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(220)) }
+            enterTransition = {
+                if (targetState.destination.route?.startsWith("service_details") == true) {
+                    fadeIn(tween(220)) + slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(220))
+                } else {
+                    EnterTransition.None
+                }
+            },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = {
+                if (initialState.destination.route?.startsWith("service_details") == true) {
+                    fadeOut(tween(220)) + slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(220))
+                } else {
+                    ExitTransition.None
+                }
+            }
             ) {
                 composable("home") { 
                     CompositionLocalProvider(
