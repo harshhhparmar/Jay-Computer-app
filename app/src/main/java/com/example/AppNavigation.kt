@@ -75,9 +75,22 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "home"
     val view = LocalView.current
+    val context = LocalContext.current
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        floatingActionButton = {
+            if (currentRoute == "home") {
+                FloatingActionButton(
+                    onClick = { openDialer(context) },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    Icon(Icons.Filled.Call, contentDescription = "Call Support")
+                }
+            }
+        },
         bottomBar = {
             Box(
                 modifier = Modifier
