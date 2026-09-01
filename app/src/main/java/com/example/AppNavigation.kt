@@ -80,7 +80,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
-            if (currentRoute == "home") {
+            if (currentRoute == "inquiry") {
                 FloatingActionButton(
                     onClick = { openDialer(context) },
                     containerColor = MaterialTheme.colorScheme.primary,
