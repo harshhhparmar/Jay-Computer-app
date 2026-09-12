@@ -109,7 +109,7 @@ fun ServicesScreen(navController: NavController) {
                             OutlinedTextField(
                                 value = searchQuery,
                                 onValueChange = { 
-                                    searchQuery = it
+                                    if (it.length <= 100) searchQuery = it
                                     expanded = true
                                 },
                                 modifier = Modifier
@@ -182,6 +182,7 @@ fun ServicesScreen(navController: NavController) {
                     matchesSearch && matchesCategory
                 }
 
+
                 if (hasError && !isLoading) {
                     ErrorStateComponent(
                         modifier = Modifier.weight(1f),
@@ -190,7 +191,17 @@ fun ServicesScreen(navController: NavController) {
                             isLoading = true
                         }
                     )
+                } else if (!isLoading && filteredServices.isEmpty()) {
+                    Box(modifier = Modifier.weight(1f).fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text("No services found", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("Try adjusting your search or category filter.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f))
+                        }
+                    }
                 } else {
+
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 160.dp),
                         contentPadding = PaddingValues(16.dp),

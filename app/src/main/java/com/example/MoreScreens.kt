@@ -73,7 +73,7 @@ fun InquiryScreen() {
 
             OutlinedTextField(
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = { if (it.length <= 100) name = it },
                 label = { Text("Full Name") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -129,7 +129,7 @@ fun InquiryScreen() {
 
             OutlinedTextField(
                 value = message,
-                onValueChange = { message = it },
+                onValueChange = { if (it.length <= 500) message = it },
                 label = { Text("Message (Optional)") },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
                 maxLines = 4,

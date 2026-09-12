@@ -198,7 +198,7 @@ fun ServiceDetailsScreen(navController: NavController, service: Service) {
             // Bottom Action
             Button(
                 onClick = { openWhatsApp(context, "I would like to apply for the ${service.titleEn} service.") },
-                modifier = Modifier.fillMaxWidth().height(56.dp).bounceClick { openWhatsApp(context, "I would like to apply for the ${service.titleEn} service.") },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
             ) {
